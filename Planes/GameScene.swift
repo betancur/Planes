@@ -269,6 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func explosion(pos: CGPoint) {
         let exploxionEffect = SKEmitterNode(fileNamed: "ExplosionParticle.sks")!
         exploxionEffect.position = pos
+        exploxionEffect.zPosition = 50
         addChild(exploxionEffect)
         
         runAction(SKAction.waitForDuration(2), completion: { exploxionEffect.removeFromParent() })
