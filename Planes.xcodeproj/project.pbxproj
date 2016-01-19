@@ -12,10 +12,11 @@
 		4625826B1C43BFDB007664B5 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4625826A1C43BFDB007664B5 /* GameScene.swift */; };
 		4625826D1C43BFDB007664B5 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4625826C1C43BFDB007664B5 /* GameViewController.swift */; };
 		462582701C43BFDB007664B5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4625826E1C43BFDB007664B5 /* Main.storyboard */; };
-		462582721C43BFDB007664B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 462582711C43BFDB007664B5 /* Assets.xcassets */; };
 		462582751C43BFDB007664B5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 462582731C43BFDB007664B5 /* LaunchScreen.storyboard */; };
 		4675400D1C46393D005106C6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 4675400B1C46393D005106C6 /* spark.png */; };
 		46E51FE31C46447900BDC0DC /* smokeTrail.sks in Resources */ = {isa = PBXBuildFile; fileRef = 46E51FE21C46447900BDC0DC /* smokeTrail.sks */; };
+		46EDBD6F1C4BA87B005072F2 /* terreno.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 46EDBD6E1C4BA87B005072F2 /* terreno.atlas */; };
+		46EDBD711C4E37C8005072F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46EDBD701C4E37C8005072F2 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,11 +26,12 @@
 		4625826A1C43BFDB007664B5 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		4625826C1C43BFDB007664B5 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		4625826F1C43BFDB007664B5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		462582711C43BFDB007664B5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		462582741C43BFDB007664B5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		462582761C43BFDB007664B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4675400B1C46393D005106C6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		46E51FE21C46447900BDC0DC /* smokeTrail.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smokeTrail.sks; sourceTree = "<group>"; };
+		46EDBD6E1C4BA87B005072F2 /* terreno.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = terreno.atlas; sourceTree = "<group>"; };
+		46EDBD701C4E37C8005072F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +70,8 @@
 				467540101C463BE7005106C6 /* Particles */,
 				4625826C1C43BFDB007664B5 /* GameViewController.swift */,
 				4625826E1C43BFDB007664B5 /* Main.storyboard */,
-				462582711C43BFDB007664B5 /* Assets.xcassets */,
+				46EDBD701C4E37C8005072F2 /* Assets.xcassets */,
+				46EDBD6E1C4BA87B005072F2 /* terreno.atlas */,
 				462582731C43BFDB007664B5 /* LaunchScreen.storyboard */,
 				462582761C43BFDB007664B5 /* Info.plist */,
 			);
@@ -145,9 +148,10 @@
 				462582691C43BFDB007664B5 /* GameScene.sks in Resources */,
 				4675400D1C46393D005106C6 /* spark.png in Resources */,
 				462582751C43BFDB007664B5 /* LaunchScreen.storyboard in Resources */,
-				462582721C43BFDB007664B5 /* Assets.xcassets in Resources */,
 				46E51FE31C46447900BDC0DC /* smokeTrail.sks in Resources */,
+				46EDBD711C4E37C8005072F2 /* Assets.xcassets in Resources */,
 				462582701C43BFDB007664B5 /* Main.storyboard in Resources */,
+				46EDBD6F1C4BA87B005072F2 /* terreno.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
