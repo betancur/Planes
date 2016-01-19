@@ -10,8 +10,16 @@ import SpriteKit
 import CoreMotion
 
 
+struct PhysicsCategory {
+    static let None:  UInt32 = 0
+    static let Bullet:   UInt32 = 0b1 // 1
+    static let Enemy: UInt32 = 0b10 // 2
+    static let Player:   UInt32 = 0b100 // 4
+}
+
+
 /// Juego al estilo 1942
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let motionManager = CMMotionManager()
     var xAcceleration = CGFloat(0)
@@ -26,6 +34,8 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         backgroundColor = UIColor(red: 0.42, green: 0.58, blue: 0.26, alpha: 1)
+        
+        physicsWorld.contactDelegate = self
         
         /* Avión */
         plane.position = CGPoint(x: size.width/2, y: 20 + plane.size.height)
@@ -127,12 +137,11 @@ class GameScene: SKScene {
     }
     
     func setupPlayer() {
-        plane.physicsBody = SKPhysicsBody(circleOfRadius:
-        plane.size.width * 0.3)
+        plane.physicsBody = SKPhysicsBody(circleOfRadius:plane.size.width * 0.3)
         plane.physicsBody!.dynamic = true
         plane.physicsBody!.allowsRotation = false
-        plane.physicsBody!.categoryBitMask = 0
-        plane.physicsBody!.collisionBitMask = 0
+        plane.physicsBody!.categoryBitMask = PhysicsCategory.Player
+        plane.physicsBody!.collisionBitMask = PhysicsCategory.None
         plane.physicsBody!.affectedByGravity = false
     }
     
@@ -164,9 +173,18 @@ class GameScene: SKScene {
     
     func spawnEnemy(){
         let enemy = SKSpriteNode(imageNamed: "enemy")
+        enemy.name = "enemy"
+        
+        let enemyBodyTexture = SKTexture(imageNamed: "enemy-outline")
+        enemy.physicsBody = SKPhysicsBody(texture: enemyBodyTexture, size:enemyBodyTexture.size())
+        enemy.physicsBody!.dynamic = true
+        enemy.physicsBody!.categoryBitMask = PhysicsCategory.Enemy
+        enemy.physicsBody!.collisionBitMask = PhysicsCategory.None
+        enemy.physicsBody!.affectedByGravity = false
+        
         
         enemy.zPosition = random(min: 90.0, max: 110.0)
-        enemy.anchorPoint = CGPoint.zero
+
         enemy.position = CGPoint(x: random(min: 0+enemy.size.width, max:size.width-enemy.size.width) , y: size.height + enemy.size.height)
 
         addChild(enemy)
@@ -194,40 +212,67 @@ class GameScene: SKScene {
         enemy.runAction(SKAction.sequence([followPath,actionRemove]))
     }
     
+// MARK: Touches - Proyectiles
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let bullet = SKSpriteNode(imageNamed: "Bullet")
-        
+        bullet.name = "bullet"
+    
+        bullet.physicsBody = SKPhysicsBody(rectangleOfSize:bullet.size)
+        bullet.physicsBody!.dynamic = true
+        bullet.physicsBody!.categoryBitMask = PhysicsCategory.Bullet
+        bullet.physicsBody!.collisionBitMask = PhysicsCategory.None
+        bullet.physicsBody!.affectedByGravity = false
+    
+        bullet.physicsBody!.contactTestBitMask = PhysicsCategory.Enemy
+    
         bullet.position = CGPoint(x: plane.position.x, y: plane.position.y+plane.size.height/2)
-
-        bullet.zPosition = 80
         
+        bullet.zPosition = 80
+    
+        runAction(SKAction.playSoundFileNamed("Shoot.wav", waitForCompletion: false))
+    
         addChild(bullet)
         
         let actionMove = SKAction.moveToY(size.height+bullet.size.height, duration: 2)
         let actionRemove = SKAction.removeFromParent()
         
         bullet.runAction(SKAction.sequence([actionMove,actionRemove]))
-        
     }
     
-//    -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-//    /* Called when a touch begins */
-//    
-//    CGPoint location = [_plane position];
-//    SKSpriteNode *bullet = [SKSpriteNode spriteNodeWithImageNamed:@"B 2.png"];
-//    
-//    bullet.position = CGPointMake(location.x,location.y+_plane.size.height/2);
-//    //bullet.position = location;
-//    bullet.zPosition = 1;
-//    bullet.scale = 0.8;
-//    
-//    SKAction *action = [SKAction moveToY:self.frame.size.height+bullet.size.height duration:2];
-//    SKAction *remove = [SKAction removeFromParent];
-//    
-//    [bullet runAction:[SKAction sequence:@[action,remove]]];
-//    
-//    [self addChild:bullet];
-//    }
+    func didBeginContact(contact: SKPhysicsContact) {
+
+        var enemyBody: SKPhysicsBody
+        
+        // Verificar cual es el enemigo.
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            enemyBody = contact.bodyB
+        } else {
+            enemyBody = contact.bodyA
+        }
+        
+        let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        if collision == PhysicsCategory.Enemy | PhysicsCategory.Bullet {
+            runAction(SKAction.playSoundFileNamed("Explosion.wav", waitForCompletion: false))
+            
+            explosion((enemyBody.node?.position)!)
+        
+            if contact.bodyA.node?.name != nil {
+               contact.bodyA.node!.removeFromParent()
+            }
+            if contact.bodyB.node?.name != nil {
+                contact.bodyB.node!.removeFromParent()
+            }
+        }
+        
+    }
+
+    func explosion(pos: CGPoint) {
+        let exploxionEffect = SKEmitterNode(fileNamed: "ExplosionParticle.sks")!
+        exploxionEffect.position = pos
+        addChild(exploxionEffect)
+        
+        runAction(SKAction.waitForDuration(2), completion: { exploxionEffect.removeFromParent() })
+    }
 
 // MARK: Utilidades
 

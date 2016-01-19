@@ -17,6 +17,9 @@
 		46E51FE31C46447900BDC0DC /* smokeTrail.sks in Resources */ = {isa = PBXBuildFile; fileRef = 46E51FE21C46447900BDC0DC /* smokeTrail.sks */; };
 		46EDBD6F1C4BA87B005072F2 /* terreno.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 46EDBD6E1C4BA87B005072F2 /* terreno.atlas */; };
 		46EDBD711C4E37C8005072F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46EDBD701C4E37C8005072F2 /* Assets.xcassets */; };
+		46EDBD731C4E5B35005072F2 /* Explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46EDBD721C4E5B35005072F2 /* Explosion.wav */; };
+		46EDBD761C4E5C00005072F2 /* Shoot.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46EDBD751C4E5C00005072F2 /* Shoot.wav */; };
+		46EDBD781C4E6396005072F2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 46EDBD771C4E6396005072F2 /* ExplosionParticle.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +35,9 @@
 		46E51FE21C46447900BDC0DC /* smokeTrail.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smokeTrail.sks; sourceTree = "<group>"; };
 		46EDBD6E1C4BA87B005072F2 /* terreno.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = terreno.atlas; sourceTree = "<group>"; };
 		46EDBD701C4E37C8005072F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		46EDBD721C4E5B35005072F2 /* Explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Explosion.wav; sourceTree = "<group>"; };
+		46EDBD751C4E5C00005072F2 /* Shoot.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Shoot.wav; sourceTree = "<group>"; };
+		46EDBD771C4E6396005072F2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +76,7 @@
 				467540101C463BE7005106C6 /* Particles */,
 				4625826C1C43BFDB007664B5 /* GameViewController.swift */,
 				4625826E1C43BFDB007664B5 /* Main.storyboard */,
+				46EDBD741C4E5B3A005072F2 /* Sounds */,
 				46EDBD701C4E37C8005072F2 /* Assets.xcassets */,
 				46EDBD6E1C4BA87B005072F2 /* terreno.atlas */,
 				462582731C43BFDB007664B5 /* LaunchScreen.storyboard */,
@@ -83,8 +90,18 @@
 			children = (
 				46E51FE21C46447900BDC0DC /* smokeTrail.sks */,
 				4675400B1C46393D005106C6 /* spark.png */,
+				46EDBD771C4E6396005072F2 /* ExplosionParticle.sks */,
 			);
 			name = Particles;
+			sourceTree = "<group>";
+		};
+		46EDBD741C4E5B3A005072F2 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				46EDBD721C4E5B35005072F2 /* Explosion.wav */,
+				46EDBD751C4E5C00005072F2 /* Shoot.wav */,
+			);
+			name = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -147,11 +164,14 @@
 			files = (
 				462582691C43BFDB007664B5 /* GameScene.sks in Resources */,
 				4675400D1C46393D005106C6 /* spark.png in Resources */,
+				46EDBD731C4E5B35005072F2 /* Explosion.wav in Resources */,
 				462582751C43BFDB007664B5 /* LaunchScreen.storyboard in Resources */,
 				46E51FE31C46447900BDC0DC /* smokeTrail.sks in Resources */,
 				46EDBD711C4E37C8005072F2 /* Assets.xcassets in Resources */,
 				462582701C43BFDB007664B5 /* Main.storyboard in Resources */,
+				46EDBD781C4E6396005072F2 /* ExplosionParticle.sks in Resources */,
 				46EDBD6F1C4BA87B005072F2 /* terreno.atlas in Resources */,
+				46EDBD761C4E5C00005072F2 /* Shoot.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
