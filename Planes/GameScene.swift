@@ -31,7 +31,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     /// Cargar el atlas del terreno
     let terrainAtlas = SKTextureAtlas(named:"terreno.atlas")
     
-    override func didMoveToView(view: SKView) {
+    
+    
+    override func didMove(to view: SKView) {
         /* Setup your scene here */
         backgroundColor = UIColor(red: 0.42, green: 0.58, blue: 0.26, alpha: 1)
         
@@ -43,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(plane)
         
-        createShadow("Avion")
+        createShadow(tipo: "Avion")
         
         setupPlayer()
         setupCoreMotion()
@@ -54,13 +56,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(smokeTrail)
 
         
-        runAction(SKAction.repeatActionForever(
-            SKAction.sequence([SKAction.runBlock(spawnTerrain),
-                SKAction.waitForDuration(1.0)])))
+        run(SKAction.repeatForever(
+            SKAction.sequence([SKAction.run(spawnTerrain),
+                               SKAction.wait(forDuration: 1.0)])))
         
-        runAction(SKAction.repeatActionForever(
-            SKAction.sequence([SKAction.runBlock(spawnEnemy),
-                SKAction.waitForDuration(1.0)])))
+        run(SKAction.repeatForever(
+            SKAction.sequence([SKAction.run(spawnEnemy),
+                               SKAction.wait(forDuration: 1.0)])))
         
     }
     
@@ -72,7 +74,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
      */
     func createShadow(tipo:String){
         let planeShadow = SKSpriteNode(imageNamed: tipo)
-        planeShadow.color = SKColor.blackColor()
+        planeShadow.color = SKColor.black
         planeShadow.colorBlendFactor = 1
         planeShadow.alpha = 0.1
         planeShadow.setScale(0.7)
@@ -88,8 +90,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setupCoreMotion() {
         motionManager.accelerometerUpdateInterval = 0.2
-        let queue = NSOperationQueue()
-        motionManager.startAccelerometerUpdatesToQueue(queue, withHandler:
+        let queue = OperationQueue()
+        motionManager.startAccelerometerUpdates(to: queue, withHandler:
         {
         accelerometerData, error in
         guard let accelerometerData = accelerometerData else {
@@ -124,21 +126,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if ((xAcceleration * 1000.0) > 50) {
                 plane.texture = SKTexture(imageNamed: "Avion-right")
                 plane.removeAllChildren()
-                createShadow("Avion-right")
+                createShadow(tipo: "Avion-right")
             } else if ((xAcceleration * 1000.0) < -50) {
                 plane.texture = SKTexture(imageNamed: "Avion-left")
                 plane.removeAllChildren()
-                createShadow("Avion-left")
+                createShadow(tipo: "Avion-left")
             } else {
                 plane.texture = SKTexture(imageNamed: "Avion")
                 plane.removeAllChildren()
-                createShadow("Avion")
+                createShadow(tipo: "Avion")
             }
     }
     
     func setupPlayer() {
         plane.physicsBody = SKPhysicsBody(circleOfRadius:plane.size.width * 0.3)
-        plane.physicsBody!.dynamic = true
+        plane.physicsBody!.isDynamic = true
         plane.physicsBody!.allowsRotation = false
         plane.physicsBody!.categoryBitMask = PhysicsCategory.Player
         plane.physicsBody!.collisionBitMask = PhysicsCategory.None
@@ -146,14 +148,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     
-    override func update(currentTime: NSTimeInterval) {
+    override func update(_ currentTime: TimeInterval) {
         updatePlayer()
     }
 
 // MARK: Enemigos y Terreno
     func spawnTerrain(){
 
-        let itemStyle = randomInRange(1...6)
+        let range: Range<Int> = 1..<6
+        let itemStyle = randomInRange(range: range)
         
         let terrainItem = SKSpriteNode(texture:terrainAtlas.textureNamed("terrain-\(itemStyle)"))
         terrainItem.anchorPoint = CGPoint.zero
@@ -164,10 +167,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        
 //        terrainItem.zPosition = (CGFloat(itemStyle+1) * 2.0)
 
-        let actionMove = SKAction.moveByX(0, y: -size.height-terrainItem.size.height, duration: 7.0)
+        let actionMove = SKAction.moveBy(x: 0, y: -size.height-terrainItem.size.height, duration: 7.0)
         let actionRemove = SKAction.removeFromParent()
         
-        terrainItem.runAction(SKAction.sequence([actionMove,actionRemove]))
+        terrainItem.run(SKAction.sequence([actionMove,actionRemove]))
         
     }
     
@@ -177,7 +180,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let enemyBodyTexture = SKTexture(imageNamed: "enemy-outline")
         enemy.physicsBody = SKPhysicsBody(texture: enemyBodyTexture, size:enemyBodyTexture.size())
-        enemy.physicsBody!.dynamic = true
+        enemy.physicsBody!.isDynamic = true
         enemy.physicsBody!.categoryBitMask = PhysicsCategory.Enemy
         enemy.physicsBody!.collisionBitMask = PhysicsCategory.None
         enemy.physicsBody!.affectedByGravity = false
@@ -191,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Path
         
-        let enemyPath = CGPathCreateMutable()
+        let enemyPath = CGMutablePath()
         
         //ControlPoints
         
@@ -203,22 +206,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let xEnd = random(min: 0+enemy.size.width, max:size.width-enemy.size.width)
         
-        CGPathMoveToPoint(enemyPath, nil, enemy.position.x, enemy.position.y)
-        CGPathAddCurveToPoint(enemyPath, nil, cp1x, cp1y, cp2x, cp2y, xEnd, -enemy.size.height)
+    
+        enemyPath.move(to: CGPoint(x: enemy.position.x, y: enemy.position.y))
+        enemyPath.addCurve(to: CGPoint(x: xEnd, y: -enemy.size.height), control1: CGPoint(x: cp1x, y: cp1y), control2: CGPoint(x: cp2x, y: cp2y))
 
-        let followPath = SKAction.followPath(enemyPath, asOffset: false, orientToPath: true, duration: 3.0)
+        let followPath = SKAction.follow(enemyPath, asOffset: false, orientToPath: true, duration: 3.0)
         let actionRemove = SKAction.removeFromParent()
 
-        enemy.runAction(SKAction.sequence([followPath,actionRemove]))
+        enemy.run(SKAction.sequence([followPath,actionRemove]))
     }
     
 // MARK: Touches - Proyectiles
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let bullet = SKSpriteNode(imageNamed: "Bullet")
         bullet.name = "bullet"
     
-        bullet.physicsBody = SKPhysicsBody(rectangleOfSize:bullet.size)
-        bullet.physicsBody!.dynamic = true
+        bullet.physicsBody = SKPhysicsBody(rectangleOf:bullet.size)
+        bullet.physicsBody!.isDynamic = true
         bullet.physicsBody!.categoryBitMask = PhysicsCategory.Bullet
         bullet.physicsBody!.collisionBitMask = PhysicsCategory.None
         bullet.physicsBody!.affectedByGravity = false
@@ -229,17 +233,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         bullet.zPosition = 80
     
-        runAction(SKAction.playSoundFileNamed("Shoot.wav", waitForCompletion: false))
+        run(SKAction.playSoundFileNamed("Shoot.wav", waitForCompletion: false))
     
         addChild(bullet)
         
-        let actionMove = SKAction.moveToY(size.height+bullet.size.height, duration: 2)
+        let actionMove = SKAction.moveTo(y: size.height+bullet.size.height, duration: 2)
         let actionRemove = SKAction.removeFromParent()
         
-        bullet.runAction(SKAction.sequence([actionMove,actionRemove]))
+        bullet.run(SKAction.sequence([actionMove,actionRemove]))
     }
     
-    func didBeginContact(contact: SKPhysicsContact) {
+    func didBegin(_ contact: SKPhysicsContact) {
 
         var enemyBody: SKPhysicsBody
         
@@ -252,9 +256,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         if collision == PhysicsCategory.Enemy | PhysicsCategory.Bullet {
-            runAction(SKAction.playSoundFileNamed("Explosion.wav", waitForCompletion: false))
+            run(SKAction.playSoundFileNamed("Explosion.wav", waitForCompletion: false))
             
-            explosion((enemyBody.node?.position)!)
+            explosion(pos: (enemyBody.node?.position)!)
         
             if contact.bodyA.node?.name != nil {
                contact.bodyA.node!.removeFromParent()
@@ -272,7 +276,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         exploxionEffect.zPosition = 50
         addChild(exploxionEffect)
         
-        runAction(SKAction.waitForDuration(2), completion: { exploxionEffect.removeFromParent() })
+        run(SKAction.wait(forDuration: 2), completion: { exploxionEffect.removeFromParent() })
     }
 
 // MARK: Utilidades
@@ -286,7 +290,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return CGFloat(Float(arc4random()) / Float(UInt32.max))
     }
     
-    func random(min min: CGFloat, max: CGFloat) -> CGFloat {
+    func random(min: CGFloat, max: CGFloat) -> CGFloat {
         assert(min < max)
         return random() * (max - min) + min
     }
